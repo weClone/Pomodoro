@@ -13,10 +13,10 @@ public class time extends JFrame implements ActionListener
 	private static final long serialVersionUID = 1L;
 	Timer t;
 	int st=0; // thoi gian dem
-	int work=25;
-	int sbreak=5;
-	int lbreak=10;
-	int session=4;
+	int work=1;
+	int sbreak=2;
+	int lbreak=2;
+	int session=2;
 	int x=200;
 	int y=150;
 	int x1;int y1;
@@ -28,7 +28,8 @@ public class time extends JFrame implements ActionListener
 	Font big,small;
 	
 	int cw;
-	boolean mode;
+	boolean mode=true;
+	boolean play=false;
 	//int 
 	
 	//
@@ -36,25 +37,27 @@ public class time extends JFrame implements ActionListener
 	public time() {
 		super();
 		setVisible(true);
-		setSize(400,400);
+		setSize(640,320);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
 		btnNewButton = new JButton("New button");
+		btnNewButton.addActionListener(this);
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(145)
+				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+					.addContainerGap(262, Short.MAX_VALUE)
 					.addComponent(btnNewButton)
-					.addContainerGap(150, Short.MAX_VALUE))
+					.addGap(33))
 		);
 		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
-					.addContainerGap(339, Short.MAX_VALUE)
-					.addComponent(btnNewButton))
+			groupLayout.createParallelGroup(Alignment.TRAILING)
+				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+					.addGap(130)
+					.addComponent(btnNewButton)
+					.addContainerGap(209, Short.MAX_VALUE))
 		);
 		getContentPane().setLayout(groupLayout);
-		t=new Timer(1000,this);//  1s
+		t=new Timer(100,this);//  1s
 		t.start();
 	//	peper();
 		y1=y-r/2;
@@ -83,71 +86,95 @@ public class time extends JFrame implements ActionListener
 		c=getBackground();
 		g.setColor(c);
 		g.fillOval(x2, y2, r2, r2);
+		int p=lbreak ;
+		if(mode){ g.setColor(Color.red);
+			p=work;
+		}
+		else {g.setColor(Color.cyan);
+		p=sbreak;
+		}
+		if(cw<1)g.setColor(Color.yellow);
+		int k=6*st/p;
+		ve(mode,k);
 	}
 	public void actionPerformed(ActionEvent e)
 	{
 		if(e.getSource()==btnNewButton)
-		{
-			st=0;
-			mode=true;
-			clock(st,mode);
+		{			play=!play;
+			clock(st);
 		}
-		else
+		else if(play)
 		{
+			//System.out.println(mode);
 			st++;
-			clock(st,mode);
+			clock(st);
 		}
-		System.out.println("aaa");
 	}
-	public void clock(int a,boolean mode)
+	public void clock(int a)
 	{ int k=a;
-	if(cw>0){	if(mode&&(k%work==0))
+	if(cw>0){
+		if(mode){  if(k%work==0)
 		{
 		k=6*k/work;
-		x3=(int)(x-r*Math.cos(k));
-		y3=(int)(y+r*Math.sin(k));
-		ve(x3,y3,mode,k);
-		if(k>=360){
+		ve(mode,k);
+		if(k>=359){
 			st=0;
-			mode=!mode;
+			mode=false;
 			cw--;
+			System.out.println(cw);
 		}
 		}
-		else
+	   }
+	
+		
+		else if(k%sbreak==0)
 		{
+			//System.out.println("a");
 			k=6*k/sbreak;
-			x3=(int)(x-r*Math.cos(k));
-			y3=(int)(y+r*Math.sin(k));
-			ve(x3,y3,mode,k);
-			if(k>=360){
+			ve(false,k);
+			if(k>=360)
+			
+	{
 				st=0;
-				mode=!mode;
+				mode=true;
 		}
+			
 		}
 	}
-	else
-	{
+	///*
+	else if(k%lbreak==0)
+	{		
 		k=6*k/lbreak;
-		x3=(int)(x-r*Math.cos(k));
-		y3=(int)(y+r*Math.sin(k));
-		ve(x3,y3,mode,k);
-		if(k>=360){
+	    ve(false,k);
+		if(k>=359){
 			st=0;
 			cw=session ;// chu trinh moi
+			mode=true;
 	}
-	}
-	}
-	public void ve(int a,int b,boolean bl,int k)
-	{
-		g.setColor(Color.red);
-		g.fillArc(x1, y1, r, r,0 , k);
-		g.setColor(c);
-		g.fillArc(x2, y2, r2, r2,0 , k);
 		
+	}
+	//*/
+	}
+	
+	public void ve(boolean bl,int k)
+	{int m,l;
+	if(bl) g.setColor(Color.red);
+	else g.setColor(Color.cyan);
+	if(cw<1)g.setColor(Color.yellow);
+	
+	for(int i=r2+1;i<r;i=i+1)
+		{
+			m=y-i/2;
+			l=x-i/2;
+			g.drawArc(l, m, i, i,90+k , 6);
+		if(i%2==1)	g.drawArc(l, m, i+1, i+1,90+k , 6);
+		}
+		//*/
+	
 	}
 	
 	public static void main(String[]a)
 	{
-		time ta=new time();
+		time ttt=new time();
 	}
 }
