@@ -57,7 +57,7 @@ public class time extends JFrame implements ActionListener
 					.addContainerGap(209, Short.MAX_VALUE))
 		);
 		getContentPane().setLayout(groupLayout);
-		t=new Timer(100,this);//  1s
+		t=new Timer(1000,this);//  1s
 		t.start();
 	//	peper();
 		y1=y-r/2;
